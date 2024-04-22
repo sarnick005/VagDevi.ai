@@ -1,0 +1,13 @@
+flask
+flask-pymongo
+dnspython
+python-dotenv
+flask-cors
+gtts==2.2.2
+googletrans==4.0.0-rc1
+google-generativeai
+Flask==2.1.1
+Flask-PyMongo==2.3.0
+PyJWT==2.3.0
+flask-jwt-extended
+

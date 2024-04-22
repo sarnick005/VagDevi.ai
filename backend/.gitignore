@@ -1,5 +1,6 @@
 config.py
 .venv
+output.mp3
 
 # Logs
 logs

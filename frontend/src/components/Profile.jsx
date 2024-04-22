@@ -19,7 +19,20 @@ const Profile = () => {
             },
           }
         );
-        setProfileData(response.data);
+
+        // Parse and format the timestamp
+        const formattedProfileData = {
+          ...response.data,
+          profile_data: {
+            ...response.data.profile_data,
+            // Assuming the timestamp key is "timestamp"
+            timestamp: new Date(
+              response.data.profile_data.timestamp
+            ).toLocaleString(),
+          },
+        };
+
+        setProfileData(formattedProfileData);
       } catch (error) {
         console.error("Error fetching profile data:", error.response.data);
         setProfileData(null);
@@ -38,22 +51,14 @@ const Profile = () => {
       console.error("Error logging out:", error.response.data);
     }
   };
-  const handleChats = async() =>{
+
+  const handleChats = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/chats/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      
       navigate(`/chats/${userId}`);
     } catch (error) {
       console.error("Chat not found:", error);
     }
-  }
+  };
 
   return (
     <div>
@@ -70,7 +75,8 @@ const Profile = () => {
       ) : (
         <p>Loading profile...</p>
       )}
-      <button onClick={handleLogout}>Logout</button> <br /><br />
+      <button onClick={handleLogout}>Logout</button> <br />
+      <br />
       <button onClick={handleChats}>Chats</button>
     </div>
   );

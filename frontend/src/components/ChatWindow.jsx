@@ -41,7 +41,28 @@ const ChatWindow = () => {
       console.error("Error logging out:", error.response.data);
     }
   };
-
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const day = String(date.getDate()).padStart(2, "0");
+  const monthIndex = date.getMonth();
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const monthName = monthNames[monthIndex];
+  const year = date.getFullYear();
+  return `${day} ${monthName} ${year}`;
+};
   const redirectToProfile = () => {
     navigate(`/profile/${userId}`);
   };
@@ -59,11 +80,16 @@ const ChatWindow = () => {
       });
       // After sending prompt, fetch profile data again to update chat window
       fetchProfile();
-      setFormData({"prompt": ""});
+      setFormData({ prompt: "" });
     } catch (error) {
       console.error("Error sending prompt:", error.response.data);
     }
   };
+
+  // // Function to format timestamp
+  // const formatTimestamp = (timestamp) => {
+  //   return new Date(timestamp).toLocaleString();
+  // };
 
   return (
     <div>
@@ -81,6 +107,9 @@ const ChatWindow = () => {
             {profileData.chats.map((chat) => (
               <div key={chat._id}>
                 <p>
+                  <strong>Timestamp:</strong> {formatDate(chat.timestamp)}
+                </p>
+                <p>
                   <strong>Prompt:</strong> {chat.prompt}
                 </p>
                 <p>
@@ -96,6 +125,8 @@ const ChatWindow = () => {
       <button onClick={handleLogout}>Logout</button> <br />
       <br />
       <button onClick={redirectToProfile}>Profile</button>
+      <br />
+      <br />
       <div>
         <form onSubmit={(e) => e.preventDefault()}>
           <div>

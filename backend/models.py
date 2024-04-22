@@ -1,5 +1,6 @@
 from app import mongo
 from bson import ObjectId
+from datetime import datetime
 
 
 # USER MODEL
@@ -32,24 +33,23 @@ class User:
 
 
 # CHAT MODEL
-
-
 class Chat:
 
-    def __init__(self, email, prompt, responseData):
+    def __init__(self, email, prompt, responseData, timestamp=datetime.now()):
         self.email = email
         self.prompt = prompt
         self.responseData = responseData
+        self.timestamp = timestamp 
 
     def save_chat(self):
-        mongo.db.chats.insert_one(
-            {
-                "email": self.email,
-                "prompt": self.prompt,
-                "responseData": self.responseData,
-            }
-        )
+        chat = {
+            "email": self.email,
+            "prompt": self.prompt,
+            "responseData": self.responseData,
+            "timestamp": self.timestamp,
+        }
+        mongo.db.chats.insert_one(chat)
 
     @staticmethod
     def find_chat(email):
-        return mongo.db.chats.find_chat({"email": email})
+        return mongo.db.chats.find({"email": email})

@@ -128,23 +128,27 @@ def create_chat(_id):
         user_data = User.find_one_by_id(id)
         if not user_data:
             return jsonify({"error": "User not found"}), 404
-        user = User(user_data["username"], user_data["email"], user_data["password"])
 
+        user = User(user_data["username"], user_data["email"], user_data["password"])
         current_user_email = user.email
-        print(current_user_email)
+
         data = request.json
         prompt = data.get("prompt")
-        print("Prompt")
-        print(prompt)
         if not prompt:
             return jsonify({"error": "Prompt is required"}), 400
 
         responseData = text_text(prompt)
-        print(responseData)
+
+        # Save chat with timestamp
+        timestamp = datetime.now()
         new_chat = Chat(
-            email=current_user_email, prompt=prompt, responseData=responseData
+            email=current_user_email,
+            prompt=prompt,
+            responseData=responseData,
+            timestamp=timestamp,
         )
         new_chat.save_chat()
+
         return (
             jsonify(
                 {
@@ -153,6 +157,7 @@ def create_chat(_id):
                         "email": current_user_email,
                         "prompt": new_chat.prompt,
                         "responseData": new_chat.responseData,
+                        "timestamp": str(timestamp),  # Convert timestamp to string
                     },
                 }
             ),
@@ -179,10 +184,14 @@ def get_all_users(_id):
         print(current_user_email)
         chats = list(mongo.db.chats.find({"email": current_user_email}))
         if not chats:
-            return jsonify({"error": "No chats found"}), 404
+            return jsonify({}), 201
 
         chats_list = [
-            {"prompt": chat["prompt"], "responseData": chat["responseData"]}
+            {
+                "prompt": chat["prompt"],
+                "responseData": chat["responseData"],
+                "timestamp": chat["timestamp"],
+            }
             for chat in chats
         ]
 
@@ -224,10 +233,15 @@ def get_profile(_id):
                 "email": chat["email"],
                 "prompt": chat["prompt"],
                 "responseData": chat["responseData"],
+                "timestamp": chat["timestamp"],
             }
             chats.append(chat_data)
+
+        print("Profile Data:", profile_data)
+        print("Chat Data:", chats)
 
         return jsonify({"profile_data": profile_data, "chats": chats}), 200
 
     except Exception as e:
+        print("Error:", e)
         return jsonify({"error": str(e)}), 500

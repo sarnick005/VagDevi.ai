@@ -6,6 +6,7 @@ from ai_models.text_text import text_text
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity  # type: ignore
 from datetime import datetime, timedelta
 from bson import ObjectId
+from trasnlate.googletrans_text import translate_text
 
 jwt = JWTManager(app)
 
@@ -237,11 +238,35 @@ def get_profile(_id):
             }
             chats.append(chat_data)
 
-        print("Profile Data:", profile_data)
-        print("Chat Data:", chats)
+        # print("Profile Data:", profile_data)
+        # print("Chat Data:", chats)
 
         return jsonify({"profile_data": profile_data, "chats": chats}), 200
 
     except Exception as e:
         print("Error:", e)
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/chats/translate/<string:_id>", methods=["POST"])
+@jwt_required()
+def translate_chat(_id):
+    chat = mongo.db.chats.find_one({"_id": ObjectId(_id)})
+
+    if not chat:
+        return {"message": "Chat not found"}, 404
+
+    response_data = chat.get("responseData")
+    # print("Response Data:", response_data)
+
+    target_language = request.json.get("targetLanguage")
+    # print("Target lang:", target_language)
+    if not target_language:
+        return {"message": "Target language not provided"}, 400
+
+    translated_text = translate_text(response_data, target_language)
+    mongo.db.chats.update_one(
+        {"_id": ObjectId(_id)}, {"$set": {"responseData": translated_text}}
+    )
+
+    return {"translated_text": translated_text}

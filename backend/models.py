@@ -35,21 +35,27 @@ class User:
 # CHAT MODEL
 class Chat:
 
-    def __init__(self, email, prompt, responseData, timestamp=datetime.now()):
+    def __init__(self, email, prompt, responseData, timestamp=None):
         self.email = email
         self.prompt = prompt
         self.responseData = responseData
-        self.timestamp = timestamp 
+        self.timestamp = timestamp if timestamp is not None else datetime.now()
 
     def save_chat(self):
+        formatted_timestamp = self.timestamp.strftime(
+            "%A, %d/%m/%y, %H:%M:%S"
+        )  # Include day of the week along with the formatted timestamp
         chat = {
             "email": self.email,
             "prompt": self.prompt,
             "responseData": self.responseData,
-            "timestamp": self.timestamp,
+            "timestamp": formatted_timestamp,
         }
         mongo.db.chats.insert_one(chat)
 
     @staticmethod
     def find_chat(email):
         return mongo.db.chats.find({"email": email})
+    @staticmethod
+    def find_one(_id):
+        return mongo.db.chats.find({"_id": _id})

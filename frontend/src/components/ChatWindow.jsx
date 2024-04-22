@@ -41,28 +41,30 @@ const ChatWindow = () => {
       console.error("Error logging out:", error.response.data);
     }
   };
-const formatDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const day = String(date.getDate()).padStart(2, "0");
-  const monthIndex = date.getMonth();
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const monthName = monthNames[monthIndex];
-  const year = date.getFullYear();
-  return `${day} ${monthName} ${year}`;
-};
+
+  const formatDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, "0");
+    const monthIndex = date.getMonth();
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const monthName = monthNames[monthIndex];
+    const year = date.getFullYear();
+    return `${day} ${monthName} ${year}`;
+  };
+
   const redirectToProfile = () => {
     navigate(`/profile/${userId}`);
   };
@@ -85,11 +87,24 @@ const formatDate = (timestamp) => {
       console.error("Error sending prompt:", error.response.data);
     }
   };
-
-  // // Function to format timestamp
-  // const formatTimestamp = (timestamp) => {
-  //   return new Date(timestamp).toLocaleString();
-  // };
+const handleTranslate = async (chatId, language) => {
+  try {
+    await axios.post(
+      `http://localhost:8080/chats/translate/${chatId}`,
+      { targetLanguage: language }, 
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    // After translating, fetch profile data again to update chat window
+    fetchProfile();
+    navigate(`/chats/${userId}`);
+  } catch (error) {
+    console.error("Error translating:", error.response.data);
+  }
+};
 
   return (
     <div>
@@ -107,7 +122,7 @@ const formatDate = (timestamp) => {
             {profileData.chats.map((chat) => (
               <div key={chat._id}>
                 <p>
-                  <strong>Timestamp:</strong> {formatDate(chat.timestamp)}
+                  <strong>Timestamp:</strong> {chat.timestamp}
                 </p>
                 <p>
                   <strong>Prompt:</strong> {chat.prompt}
@@ -115,6 +130,41 @@ const formatDate = (timestamp) => {
                 <p>
                   <strong>Response:</strong> {chat.responseData}
                 </p>
+                <select
+                  id="language-select"
+                  onChange={(e) => handleTranslate(chat._id, e.target.value)}
+                >
+                  <option disabled selected hidden>
+                    Translate to
+                  </option>
+                  <option value="en" data-lang-code="en">
+                    English
+                  </option>
+                  <option value="bn" data-lang-code="bn">
+                    Bengali
+                  </option>
+                  <option value="hi" data-lang-code="hi">
+                    Hindi
+                  </option>
+                  <option value="es" data-lang-code="es">
+                    Spanish
+                  </option>
+                  <option value="ja" data-lang-code="ja">
+                    Japanese
+                  </option>
+                  <option value="fr" data-lang-code="fr">
+                    French
+                  </option>
+                  <option value="de" data-lang-code="de">
+                    German
+                  </option>
+                  <option value="it" data-lang-code="it">
+                    Italian
+                  </option>
+                </select>
+                <br />
+                <br />
+                <br />
               </div>
             ))}
           </div>
@@ -123,6 +173,7 @@ const formatDate = (timestamp) => {
         <p>Loading profile...</p>
       )}
       <button onClick={handleLogout}>Logout</button> <br />
+      <br />
       <br />
       <button onClick={redirectToProfile}>Profile</button>
       <br />

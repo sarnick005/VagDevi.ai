@@ -59,3 +59,23 @@ class Chat:
     @staticmethod
     def find_one(_id):
         return mongo.db.chats.find({"_id": _id})
+
+
+class Image:
+    def __init__(self, email, prompt, image, responseData, timestamp=None):
+        self.email = email
+        self.prompt = prompt
+        self.image = image
+        self.responseData = responseData
+        self.timestamp = timestamp if timestamp is not None else datetime.now()
+
+    def save_image(self):
+        formatted_timestamp = self.timestamp.strftime("%A, %d/%m/%y, %H:%M:%S")
+        chat = {
+            "email": self.email,
+            "prompt": self.prompt,
+            "image": self.image,
+            "responseData": self.responseData,
+            "timestamp": formatted_timestamp,
+        }
+        mongo.db.images.insert_one(chat)

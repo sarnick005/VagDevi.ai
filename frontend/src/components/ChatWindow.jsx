@@ -80,6 +80,13 @@ const handleTranslate = async (chatId, language) => {
     console.error("Error translating:", error.response.data);
   }
 };
+  const handleImgToText = () => {
+    try {
+      navigate(`/chats/image/${userId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -151,6 +158,9 @@ const handleTranslate = async (chatId, language) => {
       <br />
       <br />
       <button onClick={redirectToProfile}>Profile</button>
+      <br />
+      <br />
+      <button onClick={handleImgToText}>Image to text</button>
       <br />
       <br />
       <div>

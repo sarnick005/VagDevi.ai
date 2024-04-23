@@ -1,16 +1,26 @@
 from app import app, mongo
 from flask import request, jsonify, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User, Chat
+from models import *
 from ai_models.text_text import text_text
+from ai_models.image_to_text import imageToText
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity  # type: ignore
 from datetime import datetime, timedelta
+from werkzeug.utils import secure_filename
 from bson import ObjectId
+import os
 from trasnlate.googletrans_text import translate_text
-
-jwt = JWTManager(app)
-
+import google.generativeai as genai
+from PIL import Image
 from datetime import datetime, timedelta
+from models import Image
+
+app.config["UPLOAD_FOLDER"] = "uploads/"
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
+
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+genai.configure(api_key="AIzaSyCoAT805oVBf-ToA_9H3MjI99nD7HuXoBk")
+jwt = JWTManager(app)
 
 
 @app.route("/", methods=["POST", "GET"])
@@ -272,7 +282,70 @@ def translate_chat(_id):
     return {"translated_text": translated_text}
 
 
-
-
 # IMAGE TO TEXT
 
+
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route("/chats/image/<string:userId>", methods=["POST"])
+@jwt_required()
+def upload_file(userId):
+    try:
+        if "image" not in request.files or "prompt" not in request.form:
+            return (
+                jsonify(
+                    {"status": "failed", "error": "No image file or prompt provided"}
+                ),
+                400,
+            )
+
+        image_file = request.files["image"]
+        prompt = request.form["prompt"]
+
+        if image_file.filename == "":
+            return jsonify({"status": "failed", "error": "No image selected"}), 400
+
+        if allowed_file(image_file.filename):
+            filename = secure_filename(image_file.filename)
+            filename, file_extension = os.path.splitext(filename)
+            current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
+            unique_filename = f"{current_datetime}{file_extension}"
+            image_path = os.path.join(app.config["UPLOAD_FOLDER"], unique_filename)
+            image_file.save(image_path)
+            print(image_path)
+            responseData = imageToText(prompt, image_path)
+            user = User.find_one_by_id(userId)
+            if user:
+                email = user["email"]
+            else:
+                return jsonify({"status": "failed", "error": "User not found"}), 404
+            image_data = Image(
+                email=email,  
+                prompt=prompt,
+                image=unique_filename,
+                responseData=responseData,
+            )
+            print(image_data)
+            image_data.save_image()
+
+            return (
+                jsonify(
+                    {
+                        "status": "success",
+                        "message": "Image saved successfully",
+                        "filename": unique_filename,
+                        "responseData": responseData,
+                    }
+                ),
+                200,
+            )
+        else:
+            return (
+                jsonify({"status": "failed", "error": "File type is not allowed"}),
+                400,
+            )
+    finally:
+        if "image_path" in locals() and os.path.exists(image_path):
+            os.remove(image_path)

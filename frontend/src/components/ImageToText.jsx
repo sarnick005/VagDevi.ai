@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import ImageUpload from "./ImageUpload";
 
-const Profile = () => {
+const ImageToText = () => {
   const [profileData, setProfileData] = useState(null);
+  const [responseData, setResponseData] = useState(null); // State to store responseData
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
@@ -20,12 +22,10 @@ const Profile = () => {
           }
         );
 
-        // Parse and format the timestamp
         const formattedProfileData = {
           ...response.data,
           profile_data: {
             ...response.data.profile_data,
-            // Assuming the timestamp key is "timestamp"
             timestamp: new Date(
               response.data.profile_data.timestamp
             ).toLocaleString(),
@@ -52,6 +52,10 @@ const Profile = () => {
     }
   };
 
+  const redirectToProfile = () => {
+    navigate(`/profile/${userId}`);
+  };
+
   const handleChats = async () => {
     try {
       navigate(`/chats/${userId}`);
@@ -60,17 +64,9 @@ const Profile = () => {
     }
   };
 
-  const handleImgToText = () => {
-    try {
-      navigate(`/chats/image/${userId}`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div>
-      <h2>User Profile</h2>
+      <h2>Image to text</h2>
       {profileData ? (
         <div>
           <p>
@@ -83,13 +79,29 @@ const Profile = () => {
       ) : (
         <p>Loading profile...</p>
       )}
+      <br />
+      <br />
+      <button onClick={redirectToProfile}>Profile</button>
+      <br />
+      <br />
       <button onClick={handleLogout}>Logout</button> <br />
       <br />
       <button onClick={handleChats}>Chats</button> <br />
       <br />
-      <button onClick={handleImgToText}>Image to text</button>
+      <ImageUpload
+        userId={userId}
+        accessToken={accessToken}
+        setResponseData={setResponseData} // Pass setResponseData function
+      />
+      {/* Display responseData if available */}
+      {responseData && (
+        <div>
+          <p>Response Data:</p>
+          <p>{responseData}</p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default Profile;
+export default ImageToText;

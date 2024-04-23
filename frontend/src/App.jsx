@@ -5,6 +5,7 @@ import Profile from "./components/Profile";
 import LoginForm from "./components/LoginForm";
 import ChatWindow from "./components/ChatWindow";
 import Home from "./components/Home";
+import ImageToText from "./components/ImageToText";
 
 const App = () => {
   return (
@@ -15,8 +16,8 @@ const App = () => {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/profile/:userId" element={<Profile />} />
-        <Route path="/profile/:userId" element={<Profile />} />
         <Route path="/chats/:userId" element={<ChatWindow />} />
+        <Route path="/chats/image/:userId" element={<ImageToText />} />
       </Routes>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const Profile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -19,13 +20,10 @@ const Profile = () => {
             },
           }
         );
-
-        // Parse and format the timestamp
         const formattedProfileData = {
           ...response.data,
           profile_data: {
             ...response.data.profile_data,
-            // Assuming the timestamp key is "timestamp"
             timestamp: new Date(
               response.data.profile_data.timestamp
             ).toLocaleString(),
@@ -42,31 +40,11 @@ const Profile = () => {
     fetchProfile();
   }, [userId, accessToken]);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:8080/logout");
-      localStorage.removeItem("access_token");
-      navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error.response.data);
-    }
-  };
 
-  const handleChats = async () => {
-    try {
-      navigate(`/chats/${userId}`);
-    } catch (error) {
-      console.error("Chat not found:", error);
-    }
-  };
 
-  const handleImgToText = () => {
-    try {
-      navigate(`/chats/image/${userId}`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
+
+ 
 
   return (
     <div>
@@ -83,11 +61,9 @@ const Profile = () => {
       ) : (
         <p>Loading profile...</p>
       )}
-      <button onClick={handleLogout}>Logout</button> <br />
-      <br />
-      <button onClick={handleChats}>Chats</button> <br />
-      <br />
-      <button onClick={handleImgToText}>Image to text</button>
+      <Navbar/>
+     
+    
     </div>
   );
 };

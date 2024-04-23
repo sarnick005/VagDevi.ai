@@ -83,7 +83,7 @@ const LoginForm = () => {
                 onChange={handleChange}
                 required
                 placeholder="Enter Password"
-                minlength="6"
+                minLength="6" // Corrected to minLength
                 className="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
                 focus:bg-white focus:outline-none"
               />
@@ -106,8 +106,8 @@ const LoginForm = () => {
               Login
             </button>
           </form>
-          <hr class="my-6 border-gray-300 w-full" />
-          <p class="mt-8">
+          <hr className="my-6 border-gray-300 w-full" />
+          <p className="mt-8">
             Need an account?{" "}
             <button
               className="text-blue-500 hover:text-blue-700 font-semibold"

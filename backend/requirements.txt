@@ -11,4 +11,5 @@ Flask-PyMongo==2.3.0
 PyJWT==2.3.0
 flask-jwt-extended
 pillow
+SpeechRecognition
 

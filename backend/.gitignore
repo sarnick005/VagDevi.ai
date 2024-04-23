@@ -1,7 +1,7 @@
 config.py
 .venv
 output.mp3
-
+uploads
 # Logs
 logs
 *.log

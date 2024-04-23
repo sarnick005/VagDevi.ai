@@ -6,6 +6,7 @@ import LoginForm from "./components/LoginForm";
 import ChatWindow from "./components/ChatWindow";
 import Home from "./components/Home";
 import ImageToText from "./components/ImageToText";
+import MyComponent from './components/MyComponent';
 
 const App = () => {
   return (

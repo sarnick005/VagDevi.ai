@@ -14,5 +14,5 @@ def imageToText(prompt, image_path):
         response.resolve()
         text = response.text
         return text
-    except:
-        print("ERROR IN IMAGE TO TEXT")
+    except Exception as e:
+        print("ERROR IN IMAGE TO TEXT:", e)

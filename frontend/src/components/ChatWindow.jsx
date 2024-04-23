@@ -1,15 +1,72 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar"; // Import the Navbar component
 
 const ChatWindow = () => {
   const [profileData, setProfileData] = useState(null);
   const [formData, setFormData] = useState({
     prompt: "",
   });
+  const [listening, setListening] = useState(false); // State variable for showing "Listening..." text
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const sendPrompt = async () => {
+    try {
+      await axios.post(`http://localhost:8080/chats/${userId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      fetchProfile();
+      setFormData({ prompt: "" });
+    } catch (error) {
+      console.error("Error sending prompt:", error.response.data);
+    }
+  };
+
+  const handleTranslate = async (chatId, language) => {
+    try {
+      await axios.post(
+        `http://localhost:8080/chats/translate/${chatId}`,
+        { targetLanguage: language },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      fetchProfile();
+      navigate(`/chats/${userId}`);
+    } catch (error) {
+      console.error("Error translating:", error.response.data);
+    }
+  };
+
+  const handleSpeak = async () => {
+    try {
+      setListening(true); // Show "Listening..." text
+      const accessToken = localStorage.getItem("access_token");
+      const response = await axios.post(`http://localhost:8080/chats/voice`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log(accessToken);
+      navigate(`/chats/${userId}`);
+      setFormData({ ...formData, prompt: response.data.recognized_text });
+    } catch (error) {
+      console.error("Error fetching profile data:", error.response.data);
+    } finally {
+      setListening(false); // Hide "Listening..." text after completion
+    }
+  };
 
   useEffect(() => {
     fetchProfile();
@@ -29,62 +86,6 @@ const ChatWindow = () => {
     } catch (error) {
       console.error("Error fetching profile data:", error.response.data);
       setProfileData(null);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:8080/logout");
-      localStorage.removeItem("access_token");
-      navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error.response.data);
-    }
-  };
-
- const redirectToProfile = () => {
-    navigate(`/profile/${userId}`);
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const sendPrompt = async () => {
-    try {
-      await axios.post(`http://localhost:8080/chats/${userId}`, formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-       fetchProfile();
-      setFormData({ prompt: "" });
-    } catch (error) {
-      console.error("Error sending prompt:", error.response.data);
-    }
-  };
-const handleTranslate = async (chatId, language) => {
-  try {
-    await axios.post(
-      `http://localhost:8080/chats/translate/${chatId}`,
-      { targetLanguage: language }, 
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-    fetchProfile();
-    navigate(`/chats/${userId}`);
-  } catch (error) {
-    console.error("Error translating:", error.response.data);
-  }
-};
-  const handleImgToText = () => {
-    try {
-      navigate(`/chats/image/${userId}`);
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -114,9 +115,10 @@ const handleTranslate = async (chatId, language) => {
                 </p>
                 <select
                   id="language-select"
+                  value={""}
                   onChange={(e) => handleTranslate(chat._id, e.target.value)}
                 >
-                  <option disabled selected hidden>
+                  <option disabled value="">
                     Translate to
                   </option>
                   <option value="en" data-lang-code="en">
@@ -154,16 +156,16 @@ const handleTranslate = async (chatId, language) => {
       ) : (
         <p>Loading profile...</p>
       )}
-      <button onClick={handleLogout}>Logout</button> <br />
-      <br />
-      <br />
-      <button onClick={redirectToProfile}>Profile</button>
-      <br />
-      <br />
-      <button onClick={handleImgToText}>Image to text</button>
-      <br />
-      <br />
+      <Navbar />
       <div>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <br />
+          <br />
+          <button onClick={handleSpeak}>Speak</button>
+          {/* Show "Listening..." text if listening state is true */}
+          {listening && <p>Listening...</p>}
+          <br />
+        </form>
         <form onSubmit={(e) => e.preventDefault()}>
           <div>
             <label htmlFor="prompt">Prompt:</label>
@@ -174,9 +176,14 @@ const handleTranslate = async (chatId, language) => {
               value={formData.prompt}
               onChange={handleChange}
               required
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                padding: "8px",
+              }}
             />
           </div>
-          <br />
+
           <br />
           <br />
           <button style={{ backgroundColor: "#73eb85" }} onClick={sendPrompt}>

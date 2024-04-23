@@ -270,3 +270,9 @@ def translate_chat(_id):
     )
 
     return {"translated_text": translated_text}
+
+
+
+
+# IMAGE TO TEXT
+

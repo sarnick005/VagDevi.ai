@@ -4,12 +4,14 @@ import SignUpForm from "./components/SignUpForm";
 import Profile from "./components/Profile";
 import LoginForm from "./components/LoginForm";
 import ChatWindow from "./components/ChatWindow";
+import Home from "./components/Home";
 
 const App = () => {
   return (
     <div>
-      <h1>Chatbot</h1>
+      <h1>VagDevi.ai</h1>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/profile/:userId" element={<Profile />} />

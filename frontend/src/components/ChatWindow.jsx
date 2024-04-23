@@ -42,30 +42,7 @@ const ChatWindow = () => {
     }
   };
 
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const day = String(date.getDate()).padStart(2, "0");
-    const monthIndex = date.getMonth();
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const monthName = monthNames[monthIndex];
-    const year = date.getFullYear();
-    return `${day} ${monthName} ${year}`;
-  };
-
-  const redirectToProfile = () => {
+ const redirectToProfile = () => {
     navigate(`/profile/${userId}`);
   };
 
@@ -80,8 +57,7 @@ const ChatWindow = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      // After sending prompt, fetch profile data again to update chat window
-      fetchProfile();
+       fetchProfile();
       setFormData({ prompt: "" });
     } catch (error) {
       console.error("Error sending prompt:", error.response.data);
@@ -98,7 +74,6 @@ const handleTranslate = async (chatId, language) => {
         },
       }
     );
-    // After translating, fetch profile data again to update chat window
     fetchProfile();
     navigate(`/chats/${userId}`);
   } catch (error) {

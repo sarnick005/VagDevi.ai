@@ -85,7 +85,7 @@ const Navbar = ({ userId: propUserId }) => {
         <Link
           to={`/chats/image/${userId}`}
           className={`block px-4 py-2 my-2 mb-4 hover:bg-gray-700 rounded ${
-            location.pathname === `/chats/image/${userId}`
+            location.pathname === `/uploads`
               ? "bg-gray-700 text-white"
               : ""
           }`}

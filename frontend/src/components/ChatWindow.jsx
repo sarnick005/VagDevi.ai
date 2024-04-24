@@ -10,75 +10,15 @@ const ChatWindow = () => {
   const [listening, setListening] = useState(false);
   const [chatDates, setChatDates] = useState([]);
   const [selectedDateChats, setSelectedDateChats] = useState([]);
+  const [currentDate, setCurrentDate] = useState(""); // State for current date
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
 
-  const handleDateButtonClick = async (date) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/chats/${userId}/${date}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      setSelectedDateChats(response.data.chats);
-      setSelectedDate(date);
-    } catch (error) {
-      console.error("Error fetching chats for date:", error.response.data);
-    }
-  };
-
-  const sendPrompt = async () => {
-    try {
-      await axios.post(`http://localhost:8080/chats/${userId}`, formData, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      fetchProfile();
-      setFormData({ prompt: "" });
-    } catch (error) {
-      console.error("Error sending prompt:", error.response.data);
-    }
-  };
-
-const handleTranslate = async (chatId, language) => {
-  try {
-    await axios.post(
-      `http://localhost:8080/chats/translate/${chatId}`,
-      { targetLanguage: language },
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
-
-
-    const response = await axios.get(
-      `http://localhost:8080/chats/${userId}/${selectedDate}`, 
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
-    setSelectedDateChats(response.data.chats);
-
-    navigate(`/chats/${userId}`);
-  } catch (error) {
-    console.error("Error translating:", error.response.data);
-  }
-};
-
-  const handleSpeak = async () => {
-    try {
-      setListening(true);
-      const response = await axios.post(`http://localhost:8080/chats/voice`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      console.log(accessToken);
-      navigate(`/chats/${userId}`);
-      setFormData({ ...formData, prompt: response.data.recognized_text });
-    } catch (error) {
-      console.error("Error fetching profile data:", error.response.data);
-    } finally {
-      setListening(false);
-    }
-  };
-
   useEffect(() => {
     fetchProfile();
     fetchChatDates();
+    setCurrentDate(getFormattedDate()); // Set current date when component mounts
   }, [userId, accessToken]);
 
   const fetchProfile = async () => {
@@ -108,6 +48,79 @@ const handleTranslate = async (chatId, language) => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const getFormattedDate = () => {
+    const dateObj = new Date();
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleDateButtonClick = async (date) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/chats/${userId}/${date}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setSelectedDateChats(response.data.chats);
+      setSelectedDate(date);
+    } catch (error) {
+      console.error("Error fetching chats for date:", error.response.data);
+    }
+  };
+
+  const sendPrompt = async () => {
+    try {
+      await axios.post(`http://localhost:8080/chats/${userId}`, formData, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      fetchProfile();
+      setFormData({ prompt: "" });
+      const response = await axios.get(
+        `http://localhost:8080/chats/${userId}/${currentDate}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setSelectedDateChats(response.data.chats);
+      navigate(`/chats/${userId}`);
+    } catch (error) {
+      console.error("Error sending prompt:", error.response.data);
+    }
+  };
+
+  const handleTranslate = async (chatId, language) => {
+    try {
+      await axios.post(
+        `http://localhost:8080/chats/translate/${chatId}`,
+        { targetLanguage: language },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      const response = await axios.get(
+        `http://localhost:8080/chats/${userId}/${selectedDate}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setSelectedDateChats(response.data.chats);
+      navigate(`/chats/${userId}`);
+    } catch (error) {
+      console.error("Error translating:", error.response.data);
+    }
+  };
+
+  const handleSpeak = async () => {
+    try {
+      setListening(true);
+      const response = await axios.post(`http://localhost:8080/chats/voice`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      console.log(accessToken);
+      navigate(`/chats/${userId}`);
+      setFormData({ ...formData, prompt: response.data.recognized_text });
+    } catch (error) {
+      console.error("Error fetching profile data:", error.response.data);
+    } finally {
+      setListening(false);
+    }
   };
 
   return (

@@ -1,10 +1,11 @@
-// frontend/src/App.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const MyComponent = () => {
   const [image, setImage] = useState(null);
   const [images, setImages] = useState([]);
+  const [responseData, setResponseData] = useState(null);
+  const [prompt, setPrompt] = useState("");
 
   useEffect(() => {
     fetchImages();
@@ -19,12 +20,18 @@ const MyComponent = () => {
     try {
       const formData = new FormData();
       formData.append("file", image);
-      await axios.post("http://localhost:8080/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:8080/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       alert("Image uploaded successfully");
+      setPrompt(response.data.prompt);
+      setResponseData(response.data.responseData);
       fetchImages(); // Refresh images after upload
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -57,17 +64,8 @@ const MyComponent = () => {
           />
         </div>
       )}
-      <h2>Image Gallery</h2>
-      <div className="image-container">
-        {images.map((img, index) => (
-          <img
-            key={index}
-            src={`http://localhost:8080/${img.filename}`}
-            alt={`Image ${index}`}
-            style={{ maxWidth: "200px", margin: "5px" }}
-          />
-        ))}
-      </div>
+  
+    
     </div>
   );
 };

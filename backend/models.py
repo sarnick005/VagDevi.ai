@@ -79,3 +79,20 @@ class Image:
             "timestamp": formatted_timestamp,
         }
         mongo.db.images.insert_one(chat)
+
+
+class Bookmark:
+    def __init__(self, email, prompt, responseData, timestamp=None):
+        self.email = email
+        self.prompt = prompt
+        self.responseData = responseData
+        self.timestamp = timestamp
+
+    def bookmark_chat(self):
+        chat = {
+            "email": self.email,
+            "prompt": self.prompt,
+            "responseData": self.responseData,
+            "timestamp": self.timestamp,
+        }
+        mongo.db.bookmarks.insert_one(chat)

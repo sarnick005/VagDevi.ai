@@ -14,18 +14,6 @@ const ImageToText = () => {
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
- const fetchProfile = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/profile/${userId}`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      setProfileData(response.data);
-    } catch (error) {
-      console.error("Error fetching profile data:", error.response.data);
-      setProfileData(null);
-    }
-  };
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
   };

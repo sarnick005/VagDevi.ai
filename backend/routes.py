@@ -25,7 +25,7 @@ from trasnlate.googletrans_text import translate_text
 import google.generativeai as genai
 from PIL import Image
 from datetime import datetime, timedelta
-from models import Image, Chat, User
+from models import Image, Chat, User,Bookmark
 from ai_models.speechRec import audio_recognizer
 import re
 from pymongo import DESCENDING
@@ -327,8 +327,6 @@ def upload_image(userId):
         if not user_details:
             return jsonify({"status": "failed", "error": "User not found"}), 404
 
-        # user_email = user_details[0].get("email")
-
         data = request.get_json()
         # print(data)
         if not data or "img" not in data or "prompt" not in data:
@@ -424,5 +422,73 @@ def delete(_id):
             return jsonify({"message": "Chat deleted successfully"}), 200
         else:
             return jsonify({"message": "Chat not found"}), 404
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
+
+# SAVE FAVOURITE POST
+
+
+@app.route("/chats/save/<string:chatId>", methods=["POST"])
+@jwt_required()
+def bookmarks_chats(chatId):
+    try:
+        chat_id = ObjectId(chatId)
+        print(chat_id)
+        chat_details = mongo.db.chats.find_one({"_id": chat_id})
+        bookmark = Bookmark(
+            email=chat_details["email"],
+            prompt=chat_details["prompt"],
+            responseData=chat_details["responseData"],
+            timestamp=chat_details["timestamp"],
+        )
+        # print(chat_details)
+        bookmark.bookmark_chat()
+
+        return jsonify({"message": "Chat bookmarked successfully"}), 200
+
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500
+
+
+
+
+
+@app.route("/chats/bookmark/<string:userId>", methods=["GET"])
+@jwt_required()
+def get_bookmarks_chats(userId):
+    try:
+        # Find the user based on userId
+        user = mongo.db.users.find_one({"_id": ObjectId(userId)})
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+
+        # Get the user's email
+        email = user["email"]
+
+        # Find bookmarks associated with the user's email
+        bookmarks = mongo.db.bookmarks.find({"email": email})
+
+        # Initialize an empty list to store bookmarked chats
+        bookmarked_chats = []
+
+        # Iterate over the bookmarks and format the timestamp
+        for bookmark in bookmarks:
+            bookmarked_chats.append(
+                {
+                    "email": bookmark["email"],
+                    "prompt": bookmark["prompt"],
+                    "responseData": bookmark["responseData"],
+                    "timestamp": bookmark["timestamp"],
+                }
+            )
+
+        # Arrange the bookmarked chats by timestamp in descending order
+        bookmarked_chats.sort(
+            key=lambda x: datetime.strptime(x["timestamp"], "%A, %d/%m/%y, %H:%M:%S"),
+            reverse=True,
+        )
+
+        return jsonify({"bookmarked_chats": bookmarked_chats}), 200
+
     except Exception as e:
         return jsonify({"message": str(e)}), 500

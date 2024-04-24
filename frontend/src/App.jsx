@@ -7,6 +7,7 @@ import ChatWindow from "./components/ChatWindow";
 import Home from "./components/Home";
 import ImageToText from "./components/ImageToText";
 import MyComponent from './components/MyComponent';
+import Bookmarks from "./components/Bookmarks";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/profile/:userId" element={<Profile />} />
         <Route path="/chats/:userId" element={<ChatWindow />} />
         <Route path="/chats/image/:userId" element={<ImageToText />} />
+        <Route path="/chats/bookmark/:userId" element={<Bookmarks />} />
       </Routes>
     </div>
   );

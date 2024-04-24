@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import axios from "axios";
 
-const Navbar = ({ userId: propUserId }) => {
+const Navbar = ({ userId: propUserId, chatId }) => {
   const [profileData, setProfileData] = useState(null);
   const { userId: routeUserId } = useParams();
   const userId = propUserId || routeUserId;
@@ -47,19 +47,12 @@ const Navbar = ({ userId: propUserId }) => {
     }
   };
 
+
+
   return (
     <aside className="bg-black text-white w-64 h-screen flex flex-col justify-between">
       <div className="p-4"></div>
       <div className="p-4">
-        <Link
-          to="/login"
-          onClick={handleLogout}
-          className={`block px-4 py-2 my-2  hover:bg-gray-700 rounded ${
-            location.pathname === "/login" ? "bg-gray-700 text-white" : ""
-          }`}
-        >
-          Logout
-        </Link>
         <Link
           to={`/profile/${userId}`}
           className={`block px-4 py-2 my-2  hover:bg-gray-700 rounded ${
@@ -82,7 +75,7 @@ const Navbar = ({ userId: propUserId }) => {
         </Link>
         <Link
           to={`/chats/image/${userId}`}
-          className={`block px-4 py-2 my-2 mb-6 hover:bg-gray-700 rounded ${
+          className={`block px-4 py-2 my-2 hover:bg-gray-700 rounded ${
             location.pathname === `/chats/image/${userId}`
               ? "bg-gray-700 text-white"
               : ""
@@ -90,7 +83,27 @@ const Navbar = ({ userId: propUserId }) => {
         >
           Image to Text
         </Link>
-        {/* Display username and email under "Image to Text" */}
+
+        <Link
+          to={`/chats/bookmark/${userId}`}
+          className={`block px-4 py-2 my-2 hover:bg-gray-700 rounded ${
+            location.pathname === `/chats/bookmark/${userId}`
+              ? "bg-gray-700 text-white"
+              : ""
+          }`}
+        >
+          Bookmarks
+        </Link>
+
+        <Link
+          to="/login"
+          onClick={handleLogout}
+          className={`block px-4 py-2 my-2  mb-6 hover:bg-gray-700 rounded ${
+            location.pathname === "/login" ? "bg-gray-700 text-white" : ""
+          }`}
+        >
+          Logout
+        </Link>
         {profileData && profileData.profile_data && (
           <div className="mt-4 flex items-center mb-4">
             <div className="text-lg h-[25px] w-[25px] border border-white rounded-full flex items-center justify-center text-white">

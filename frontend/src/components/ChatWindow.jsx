@@ -6,6 +6,8 @@ import { TextField, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MicIcon from "@mui/icons-material/Mic";
 import DeleteIcon from "@mui/icons-material/Delete";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 const ChatWindow = () => {
   const [profileData, setProfileData] = useState(null);
@@ -161,6 +163,31 @@ const handleDelete = async (chatId) => {
     console.error("Error deleting:", error);
   }
 };
+const handleBookmark = async (chatId) => {
+  try {
+    await axios.post(`http://localhost:8080/chats/save/${chatId}`, {chatId: chatId}, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json", 
+      },
+    });
+
+    // setSelectedDateChats((prevChats) => {
+    //   return prevChats.map((chat) => {
+    //     if (chat._id === chatId) {
+    //       return { ...chat, bookmarked: true };
+    //     }
+    //     return chat;
+    //   });
+    // });
+        navigate(`/chats/${userId}`);
+  } catch (error) {
+    console.error("Error bookmarking chat:", error);
+  }
+};
+
+
+
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -169,19 +196,27 @@ const handleDelete = async (chatId) => {
       </div>
       <div className="ml-64 flex flex-col overflow-y-auto p-4 ">
         <div>
-          <h2 className="mb-4  ">Chat Data</h2>
           <div
             className="p-4 h-[300px] fixed left-0 top-[60px] text-white"
-            style={{ maxHeight: "400px", height: "400px", overflowY: "auto" }}
+            style={{
+              maxHeight: "400px",
+              height: "400px",
+              overflowY: "auto",
+              overflowX: "hidden",
+            }}
           >
-            <h1 className="absolute left-[50px] my-4">Chat history</h1>
+            <h2 className="mb-4 relative left-[60px] mb-4 text-xl underline">
+              VagDevi.ai
+            </h2>
+            <h1 className="relative left-[60px] mb-4">Chat history</h1>
             {chatDates.length > 0 ? (
               <div className="mb-4 flex flex-col">
                 {chatDates.map((date) => (
                   <button
                     key={date}
-                    className="w-[220px] mb-2 mr-2 rounded border border-gray-300 px-3 py-2 hover:bg-gray-100 hover:text-black"
+                    className="w-[220px] mb-2 mr-2 rounded-md border border-gray-400 px-4 py-2 text-white bg-black hover:bg-gray-700 transition duration-300 ease-in-out"
                     onClick={() => handleDateButtonClick(date)}
+                    style={{ boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)" }}
                   >
                     {date}
                   </button>
@@ -234,8 +269,21 @@ const handleDelete = async (chatId) => {
                               <option value="ja">Japanese</option>
                               <option value="es">Spanish</option>
                             </select>
-                            <button onClick={() => handleDelete(chat._id)}>
+                            <button
+                              className="ml-4"
+                              onClick={() => handleDelete(chat._id)}
+                            >
                               <DeleteIcon />
+                            </button>
+                            <button
+                              className="ml-4"
+                              onClick={() => handleBookmark(chat._id)}
+                            >
+                              {chat.bookmarked ? (
+                                <BookmarkIcon />
+                              ) : (
+                                <BookmarkBorderIcon />
+                              )}
                             </button>
                           </div>
                           <hr />

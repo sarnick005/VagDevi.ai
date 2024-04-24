@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import { TextField, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MicIcon from "@mui/icons-material/Mic";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ChatWindow = () => {
   const [profileData, setProfileData] = useState(null);
@@ -124,21 +125,42 @@ const ChatWindow = () => {
     }
   };
 
-  const handleSpeak = async () => {
-    try {
-      setListening(true);
-      const response = await axios.post(`http://localhost:8080/chats/voice`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      console.log(accessToken);
-      navigate(`/chats/${userId}`);
-      setFormData({ ...formData, prompt: response.data.recognized_text });
-    } catch (error) {
-      console.error("Error fetching profile data:", error.response.data);
-    } finally {
-      setListening(false);
-    }
-  };
+const handleSpeak = async () => {
+  try {
+    setListening(true);
+    setFormData({ ...formData, prompt: "Listening..." }); // Set the prompt to "Listening..."
+    const response = await axios.post(`http://localhost:8080/chats/voice`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    console.log(accessToken);
+    navigate(`/chats/${userId}`);
+    setFormData({ ...formData, prompt: response.data.recognized_text }); 
+  } catch (error) {
+    console.error("Error fetching profile data:", error.response.data);
+  } finally {
+    setListening(false);
+  }
+};
+const styles = {
+  scrollableContainer: {
+    maxHeight: "700px",
+    overflowY: "auto",
+    scrollbarWidth: "thin",
+    scrollbarColor: "#888 #f1f1f1",
+    width: "800px", 
+  },
+};
+const handleDelete = async (chatId) => {
+  try {
+    await axios.delete(`http://localhost:8080/chats/delete/${chatId}`);
+    setSelectedDateChats((prevChats) =>
+      prevChats.filter((chat) => chat._id !== chatId)
+    );
+    navigate(`/chats/${userId}`);
+  } catch (error) {
+    console.error("Error deleting:", error);
+  }
+};
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -146,109 +168,140 @@ const ChatWindow = () => {
         <Navbar userId={userId} />
       </div>
       <div className="ml-64 flex flex-col overflow-y-auto p-4 ">
-        <h2 className="mb-4  ">Chat Data</h2>
-        <div
-          className=" p-4 h-[300px] absolute left-[0px] top-[60px] text-white"
-          style={{ maxHeight: "400px", height: "400px", overflowY: "auto" }}
-        >
-          {chatDates.length > 0 ? (
-            <div className="mb-4 flex flex-col ">
-              {chatDates.map((date) => (
-                <button
-                  key={date}
-                  className="w-[220px] mb-2 mr-2 rounded border border-gray-300 px-3 py-2 hover:bg-gray-100  hover:text-black"
-                  onClick={() => handleDateButtonClick(date)}
-                >
-                  {date}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p>No chat dates found.</p>
-          )}
-        </div>
-        {profileData && profileData.profile_data ? (
-          <div>
-            <p>
-              {/* <strong>Username:</strong> {profileData.profile_data.username} */}
-            </p>
-            <p>
-              {/* <strong>Email:</strong> {profileData.profile_data.email} */}
-            </p>
+        <div>
+          <h2 className="mb-4  ">Chat Data</h2>
+          <div
+            className="p-4 h-[300px] fixed left-0 top-[60px] text-white"
+            style={{ maxHeight: "400px", height: "400px", overflowY: "auto" }}
+          >
+            <h1 className="absolute left-[50px] my-4">Chat history</h1>
+            {chatDates.length > 0 ? (
+              <div className="mb-4 flex flex-col">
+                {chatDates.map((date) => (
+                  <button
+                    key={date}
+                    className="w-[220px] mb-2 mr-2 rounded border border-gray-300 px-3 py-2 hover:bg-gray-100 hover:text-black"
+                    onClick={() => handleDateButtonClick(date)}
+                  >
+                    {date}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p>No chat dates found.</p>
+            )}
+          </div>
+
+          <div
+            style={{
+              width: "700px",
+              height: "300px",
+              margin: "0 auto",
+              display: "flex",
+              justifyContent: "center",
+              position: "absolute",
+              left: "500px",
+            }}
+          >
             <div>
-              {/* <h3 className="mb-2">Chats:</h3> */}
-              {selectedDateChats.length > 0 ? (
-                selectedDateChats.map((chat) => (
-                  <div key={chat._id} className="mb-4">
-                    <p>
-                      <strong>Timestamp:</strong> {chat.date}
-                    </p>
-                    <p>
-                      <strong>Prompt:</strong> {chat.prompt}
-                    </p>
-                    <p>
-                      <strong>Response:</strong> {chat.responseData}
-                    </p>
-                    <select
-                      id="language-select"
-                      value={""}
-                      onChange={(e) =>
-                        handleTranslate(chat._id, e.target.value)
-                      }
-                      className="mt-2 block"
-                    >
-                      <option disabled value="">
-                        Translate to
-                      </option>
-                      <option value="en">English</option>
-                      <option value="hi">Hindi</option>
-                      <option value="bn">Bengali</option>
-                      <option value="de">German</option>
-                      <option value="ja">Japanese</option>
-                      <option value="es">Spanish</option>
-                    </select>
-                    <br />
-                    <br />
+              {profileData && profileData.profile_data ? (
+                <div>
+                  <div style={styles.scrollableContainer}>
+                    {selectedDateChats.length > 0 ? (
+                      selectedDateChats.map((chat) => (
+                        <div
+                          key={chat._id}
+                          className="mb-2 border border-black rounded p-4"
+                        >
+                          <div className="flex flex-row ">
+                            <p className="mr-[400px]">
+                              <strong>Timestamp:</strong> {chat.date}
+                            </p>
+                            <select
+                              id="language-select"
+                              value={""}
+                              onChange={(e) =>
+                                handleTranslate(chat._id, e.target.value)
+                              }
+                            >
+                              <option disabled value="">
+                                Translate to
+                              </option>
+                              <option value="en">English</option>
+                              <option value="hi">Hindi</option>
+                              <option value="bn">Bengali</option>
+                              <option value="de">German</option>
+                              <option value="ja">Japanese</option>
+                              <option value="es">Spanish</option>
+                            </select>
+                            <button onClick={() => handleDelete(chat._id)}>
+                              <DeleteIcon />
+                            </button>
+                          </div>
+                          <hr />
+                          <p>
+                            <strong>Prompt:</strong> {chat.prompt}
+                          </p>
+                          <hr />
+                          <p>
+                            <strong>Response:</strong> {chat.responseData}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <p>No chats for this date.</p>
+                    )}
                     <br />
                   </div>
-                ))
+                </div>
               ) : (
-                <p>No chats for this date.</p>
+                <p>Loading profile...</p>
               )}
             </div>
           </div>
-        ) : (
-          <p>Loading profile...</p>
-        )}
-        <div className="mt-auto flex items-center justify-center">
-          <TextField
-            id="prompt"
-            name="prompt"
-            label="Ask me anything"
-            value={formData.prompt}
-            onChange={handleChange}
-            variant="outlined"
-            fullWidth
-            size="small"
-            sx={{
-              width: "70%",
-              mr: 2,
-              "& .MuiOutlinedInput-root": {
-                "&.Mui-focused": {
-                  borderColor: "black",
+        </div>
+        <div
+          style={{
+            position: "fixed",
+            bottom: 20,
+            left: 120,
+            width: "100%",
+            zIndex: 5,
+          }}
+        >
+          <div className="flex items-center justify-center">
+            <TextField
+              id="prompt"
+              name="prompt"
+              label="Ask me anything"
+              value={formData.prompt}
+              onChange={handleChange}
+              variant="outlined"
+              fullWidth
+              size="small"
+              sx={{
+                width: "60%",
+                mr: 2,
+                bgcolor: "white",
+                color: "black",
+                "& .MuiOutlinedInput-root": {
+                  "&.Mui-focused": {
+                    borderColor: "white",
+                  },
                 },
-              },
-            }}
-            multiline
-            rows={2}
-          />
-          <div>
-            <IconButton onClick={handleSpeak} disabled={listening}>
-              <MicIcon />
-            </IconButton>
-            <IconButton onClick={sendPrompt}>
-              <SendIcon />
-            </IconButton>
+              }}
+              multiline
+              rows={1.3}
+            />
+
+            <div>
+              <IconButton onClick={handleSpeak} disabled={listening}>
+                <MicIcon />
+              </IconButton>
+              <IconButton onClick={sendPrompt}>
+                <SendIcon />
+              </IconButton>
+            </div>
           </div>
         </div>
       </div>

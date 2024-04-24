@@ -30,6 +30,7 @@ from ai_models.speechRec import audio_recognizer
 import re
 from pymongo import DESCENDING
 from config import Config
+from flask_pymongo import PyMongo
 
 GEMINI_API_KEY = Config.GEMINI_API_KEY
 
@@ -413,3 +414,15 @@ def speech_upload():
         recognized_text = audio_recognizer()
         print(recognized_text)
         return jsonify({"recognized_text": recognized_text}), 200
+# DELETE ROUTE
+@app.route("/chats/delete/<string:_id>", methods=["DELETE"])
+def delete(_id):
+    try:
+        chat_id = ObjectId(_id)
+        result = mongo.db.chats.delete_one({"_id": chat_id})
+        if result.deleted_count == 1:
+            return jsonify({"message": "Chat deleted successfully"}), 200
+        else:
+            return jsonify({"message": "Chat not found"}), 404
+    except Exception as e:
+        return jsonify({"message": str(e)}), 500

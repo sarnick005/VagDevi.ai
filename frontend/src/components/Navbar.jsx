@@ -49,9 +49,7 @@ const Navbar = ({ userId: propUserId }) => {
 
   return (
     <aside className="bg-black text-white w-64 h-screen flex flex-col justify-between">
-      <div className="p-4">
-        <div className="text-xl font-bold">Sidebar</div>
-      </div>
+      <div className="p-4"></div>
       <div className="p-4">
         <Link
           to="/login"
@@ -84,7 +82,7 @@ const Navbar = ({ userId: propUserId }) => {
         </Link>
         <Link
           to={`/chats/image/${userId}`}
-          className={`block px-4 py-2 my-2 mb-4 hover:bg-gray-700 rounded ${
+          className={`block px-4 py-2 my-2 mb-6 hover:bg-gray-700 rounded ${
             location.pathname === `/chats/image/${userId}`
               ? "bg-gray-700 text-white"
               : ""
@@ -92,6 +90,24 @@ const Navbar = ({ userId: propUserId }) => {
         >
           Image to Text
         </Link>
+        {/* Display username and email under "Image to Text" */}
+        {profileData && profileData.profile_data && (
+          <div className="mt-4 flex items-center mb-4">
+            <div className="text-lg h-[25px] w-[25px] border border-white rounded-full flex items-center justify-center text-white">
+              <span
+                style={{ display: "inline-block", verticalAlign: "middle" }}
+              >
+                {profileData.profile_data.username[0]}
+              </span>
+            </div>
+            <div className="ml-2">
+              <p className="font-semibold">
+                {profileData.profile_data.username}
+              </p>
+              <p className="text-gray-400">{profileData.profile_data.email}</p>
+            </div>
+          </div>
+        )}
       </div>
     </aside>
   );

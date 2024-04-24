@@ -104,12 +104,12 @@ const ImageToText = () => {
                   type="file"
                   onChange={handleImageChange}
                   accept="image/*"
-                  className="hidden" // Hide the default file input
-                  id="image-upload" // Add an ID for label association
+                  className="hidden" 
+                  id="image-upload" 
                 />
                 <label
-                  htmlFor="image-upload" // Associate the label with the file input
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white text-gray-700 hover:border-gray-500 cursor-pointer" // Style the label to mimic the file input
+                  htmlFor="image-upload" 
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white text-gray-700 hover:border-gray-500 cursor-pointer" 
                 >
                   Choose File
                 </label>

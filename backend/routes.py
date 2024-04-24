@@ -353,6 +353,7 @@ def upload_image(userId):
                 f.write(base64.b64decode(img_data["data"]))
             print("Line before responseData")
             responseData = imageToText(prompt, image_path)
+            print(responseData)
 
             return (
                 jsonify(

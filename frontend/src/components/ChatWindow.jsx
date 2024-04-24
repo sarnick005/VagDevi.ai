@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import { TextField, IconButton } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import MicIcon from "@mui/icons-material/Mic";
 
 const ChatWindow = () => {
   const [profileData, setProfileData] = useState(null);
@@ -10,7 +13,7 @@ const ChatWindow = () => {
   const [listening, setListening] = useState(false);
   const [chatDates, setChatDates] = useState([]);
   const [selectedDateChats, setSelectedDateChats] = useState([]);
-  const [currentDate, setCurrentDate] = useState(""); // State for current date
+  const [currentDate, setCurrentDate] = useState("");
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
@@ -18,8 +21,22 @@ const ChatWindow = () => {
   useEffect(() => {
     fetchProfile();
     fetchChatDates();
-    setCurrentDate(getFormattedDate()); // Set current date when component mounts
+    setCurrentDate(getFormattedDate());
+    fetchChatsForDate(getFormattedDate()); // Fetch chats for the current date
   }, [userId, accessToken]);
+
+  const fetchChatsForDate = async (date) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/chats/${userId}/${date}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setSelectedDateChats(response.data.chats);
+      setSelectedDate(date);
+    } catch (error) {
+      console.error("Error fetching chats for date:", error.response.data);
+    }
+  };
 
   const fetchProfile = async () => {
     try {
@@ -203,37 +220,36 @@ const ChatWindow = () => {
         ) : (
           <p>Loading profile...</p>
         )}
-        <div>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <br />
-            <br />
-            <button onClick={handleSpeak}>Speak</button>
-            {listening && <p>Listening...</p>}
-            <br />
-          </form>
-          <form onSubmit={(e) => e.preventDefault()}>
-            <div>
-              <label htmlFor="prompt">Prompt:</label>
-              <input
-                type="text"
-                id="prompt"
-                name="prompt"
-                value={formData.prompt}
-                onChange={handleChange}
-                required
-                style={{
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  padding: "8px",
-                }}
-              />
-            </div>
-            <br />
-            <br />
-            <button style={{ backgroundColor: "#73eb85" }} onClick={sendPrompt}>
-              Send
-            </button>
-          </form>
+        <div className="mt-auto flex items-center justify-center">
+          <TextField
+            id="prompt"
+            name="prompt"
+            label="Ask me anything"
+            value={formData.prompt}
+            onChange={handleChange}
+            variant="outlined"
+            fullWidth
+            size="small"
+            sx={{
+              width: "70%",
+              mr: 2,
+              "& .MuiOutlinedInput-root": {
+                "&.Mui-focused": {
+                  borderColor: "black",
+                },
+              },
+            }}
+            multiline
+            rows={2}
+          />
+          <div>
+            <IconButton onClick={handleSpeak} disabled={listening}>
+              <MicIcon />
+            </IconButton>
+            <IconButton onClick={sendPrompt}>
+              <SendIcon />
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>

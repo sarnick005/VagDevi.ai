@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "./Navbar";
+import { TextField, IconButton } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import Navbar from "./Navbar"; // Import Navbar component
+import axios from "axios"; // Import axios for making HTTP requests
 
 const ImageToText = () => {
   const [responseData, setResponseData] = useState(null);
@@ -12,7 +14,18 @@ const ImageToText = () => {
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
-
+ const fetchProfile = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/profile/${userId}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      setProfileData(response.data);
+    } catch (error) {
+      console.error("Error fetching profile data:", error.response.data);
+      setProfileData(null);
+    }
+  };
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
   };
@@ -74,58 +87,78 @@ const ImageToText = () => {
   };
 
   return (
-    <div className="flex">
-      <Navbar userId={userId} />
-      <div className="image-to-text-content" style={{ padding: "20px" }}>
-        <h2>Image to Text</h2>
-        <h2>Image Upload</h2>
-        <form onSubmit={handleSubmit}>
-          <input type="file" onChange={handleImageChange} accept="image/*" />
-          {image && (
-            <img
-              src={URL.createObjectURL(image)}
-              alt="Uploaded Image Preview"
-              style={{
-                maxWidth: "100%",
-                maxHeight: "200px",
-                marginTop: "10px",
-              }}
-            />
+    <>
+      <Navbar userId={userId} /> {/* Set the Navbar component here */}
+      <div className="fixed inset-0 flex justify-center items-center overflow-hidden">
+        <div className="w-[1200px] max-w-lg bg-white p-8 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold mb-4 text-center">Image to Text</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4 flex">
+              {" "}
+              {/* Center the input field */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Upload Image
+                </label>
+                <input
+                  type="file"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  className="hidden" // Hide the default file input
+                  id="image-upload" // Add an ID for label association
+                />
+                <label
+                  htmlFor="image-upload" // Associate the label with the file input
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white text-gray-700 hover:border-gray-500 cursor-pointer" // Style the label to mimic the file input
+                >
+                  Choose File
+                </label>
+
+                {image && (
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Uploaded Image Preview"
+                    className="mt-2 rounded-md"
+                    style={{ maxWidth: "100%", maxHeight: "200px" }}
+                  />
+                )}
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <div className="mb-4 w-[500px]">
+                <TextField
+                  type="text"
+                  value={prompt}
+                  onChange={handlePromptChange}
+                  placeholder="Enter prompt here"
+                  fullWidth
+                  variant="outlined"
+                  size="small"
+                  className="w-[300px]"
+                />
+              </div>
+              <div>
+                <IconButton type="submit">
+                  <SendIcon />
+                </IconButton>
+              </div>
+            </div>
+          </form>
+          {responseData && (
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-700">Prompt:</p>
+              <p className="mt-1 text-sm text-gray-500">{prompt}</p>
+              <p className="mt-2 text-sm font-medium text-gray-700">
+                Response Data:
+              </p>
+              <div className="w-full max-w-md overflow-y-auto h-[200px]">
+                <p className="mt-1 text-sm text-gray-500">{responseData}</p>
+              </div>
+            </div>
           )}
-          <br />
-          <input
-            type="text"
-            value={prompt}
-            onChange={handlePromptChange}
-            placeholder="Enter prompt here"
-          />
-          <br />
-          <button type="submit">Submit</button>
-        </form>
-        {responseText && <p>Text Response: {responseText}</p>}
-        {responseImage && (
-          <div>
-            <p>Image:</p>
-            <img
-              src={`data:image/jpeg;base64,${responseImage}`}
-              alt="Response Image"
-            />
-          </div>
-        )}
-        {responseData && (
-          <div>
-            <p>Prompt:</p>
-            <p>{prompt}</p>
-          </div>
-        )}
-        {responseData && (
-          <div>
-            <p>Response Data:</p>
-            <pre>{responseData}</pre>
-          </div>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

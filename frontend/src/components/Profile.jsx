@@ -87,10 +87,11 @@ const Profile = () => {
             </Link>
             <Link
               to={`/chats/image/${userId}`}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 mr-2 rounded"
             >
               Image to Chats
             </Link>
+
           </div>
         </div>
       </div>

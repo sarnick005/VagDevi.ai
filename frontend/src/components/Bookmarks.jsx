@@ -69,7 +69,7 @@ const styles = {
         className="flex flex-row"
         style={{
           width: "800px",
-          height: "800px",
+          height: "750px",
           margin: "0 auto",
           display: "flex",
           justifyContent: "center",
@@ -80,10 +80,11 @@ const styles = {
           maxHeight: "900px",
         }}
       >
-        <div className="ml-4 my-4" div style={styles.scrollableContainer}>
+        
+        <div className="m-4" div style={styles.scrollableContainer}>
           <ul>
             {bookmarkedChats.map((chat, index) => (
-              <li key={index} className="my-4 border border-black rounded p-4">
+              <li key={index} className="mb-4 border border-black rounded p-4">
                 <p>
                   <strong>Timestamp:</strong> {chat.timestamp}
                 </p>

@@ -14,12 +14,16 @@ const ImageToText = () => {
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
+  const [promptVal, setPromptVal] = useState(""); // Define promptVal state variable
+
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
   };
 
   const handlePromptChange = (event) => {
-    setPrompt(event.target.value);
+    const value = event.target.value;
+    setPrompt(value);
+    setPromptVal(value); // Store prompt value in promptVal state variable
   };
 
   const handleSubmit = async (event) => {
@@ -58,7 +62,7 @@ const ImageToText = () => {
       setResponseText(response.data.text);
       setResponseImage(response.data.image);
       setResponseData(response.data.responseData);
-      setPrompt(response.data.prompt);
+      setPrompt("");
       fetchChats(); // Fetch chats after updating
     } catch (error) {
       console.error("Error uploading image:", error.response.data);
@@ -92,12 +96,12 @@ const ImageToText = () => {
                   type="file"
                   onChange={handleImageChange}
                   accept="image/*"
-                  className="hidden" 
-                  id="image-upload" 
+                  className="hidden"
+                  id="image-upload"
                 />
                 <label
-                  htmlFor="image-upload" 
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white text-gray-700 hover:border-gray-500 cursor-pointer" 
+                  htmlFor="image-upload"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white text-gray-700 hover:border-gray-500 cursor-pointer"
                 >
                   Choose File
                 </label>
@@ -135,11 +139,14 @@ const ImageToText = () => {
           {responseData && (
             <div className="mt-4">
               <p className="text-sm font-medium text-gray-700">Prompt:</p>
-              <p className="mt-1 text-sm text-gray-500">{prompt}</p>
+              <p className="mt-1 text-sm text-gray-500">{promptVal}</p>
               <p className="mt-2 text-sm font-medium text-gray-700">
                 Response Data:
               </p>
-              <div className="w-full max-w-md overflow-y-auto h-[200px]">
+              <div
+                className="w-full max-w-md overflow-y-auto"
+                style={{ maxHeight: "200px" }} // Set a max height to limit the chat box height
+              >
                 <p className="mt-1 text-sm text-gray-500">{responseData}</p>
               </div>
             </div>

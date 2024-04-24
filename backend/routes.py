@@ -20,10 +20,10 @@ from trasnlate.googletrans_text import translate_text
 import google.generativeai as genai
 from PIL import Image
 from datetime import datetime, timedelta
-from models import Image
+from models import Image,Chat,User
 from ai_models.speechRec import audio_recognizer
 import re
-
+from pymongo import DESCENDING
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "frontend/uploads")
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -190,36 +190,90 @@ def create_chat(_id):
 
 
 # # GET RESPONSE ROUTE - INTEGRATION NOT DONE
+# GET  DATES
 
 
-@app.route("/chats/<string:_id>", methods=["GET"])
+from flask import jsonify
+from bson import ObjectId
+from datetime import datetime  # Import datetime library
+
+
+@app.route("/chats/dates/<string:user_id>", methods=["GET"])
 @jwt_required()
-def get_all_users(_id):
+def get_user_chat_dates(user_id):
     try:
-        id = ObjectId(_id)
-        user_data = User.find_one_by_id(id)
+        user_object_id = ObjectId(user_id)
+
+        user_data = User.find_one_by_id(user_object_id)
         if not user_data:
             return jsonify({"error": "User not found"}), 404
-        user = User(user_data["username"], user_data["email"], user_data["password"])
+        user_email = user_data["email"]
 
-        current_user_email = user.email
-        print(current_user_email)
-        chats = list(mongo.db.chats.find({"email": current_user_email}))
-        if not chats:
-            return jsonify({}), 201
+        distinct_dates = mongo.db.chats.distinct("timestamp", {"email": user_email})
+        formatted_dates = set()
+        timestamp_format = "%A, %d/%m/%y, %H:%M:%S" 
+        for date_str in distinct_dates:
+            timestamp = datetime.strptime(date_str, timestamp_format)
+            formatted_date_str = timestamp.strftime("%Y-%m-%d")
+            formatted_dates.add(formatted_date_str)
 
+        sorted_dates = sorted(list(formatted_dates), reverse=True)
+
+        return jsonify({"dates": sorted_dates}), 200
+
+    except Exception as e:
+        print("Error in fetching user chat dates:", e)
+        return jsonify({"error": "Internal server error"}), 500
+
+
+from datetime import datetime, timedelta
+
+
+@app.route("/chats/<string:user_id>/<string:date>", methods=["GET"])
+@jwt_required()
+def get_user_chats_by_date(user_id, date):
+    try:
+        user_object_id = ObjectId(user_id)
+        user_data = User.find_one_by_id(user_object_id)
+        if not user_data:
+            return jsonify({"error": "User not found"}), 404
+        user_email = user_data["email"]
+
+        # Corrected the date format here
+        date_object = datetime.strptime(date, "%Y-%m-%d")
+
+        formatted_date = date_object.strftime("%d-%m-%y")
+
+        # Get today's date
+        today_date = datetime.now().date()
+
+        chats = list(
+            mongo.db.chats.find(
+                {"email": user_email, "timestamp": {"$regex": f".*{formatted_date}.*"}}
+            )
+        )
         chats_list = [
             {
+                "_id": str(chat["_id"]),
+                "date": chat["timestamp"].split(", ")[1].strip(),
                 "prompt": chat["prompt"],
                 "responseData": chat["responseData"],
-                "timestamp": chat["timestamp"],
             }
             for chat in chats
+            if datetime.strptime(
+                chat["timestamp"].split(", ")[1].strip(), "%d-%m-%y"
+            ).date()
+            != today_date
         ]
 
+        print("DATE FETCHED CHATS")
+        print(chats_list)
+
         return jsonify({"chats": chats_list}), 200
+
     except Exception as e:
-        print("Error in db fetching:", e)
+        print("Error in fetching user chats by date:", e)
+        return jsonify({"error": "Internal server error"}), 500
 
 
 # # PROFILE ROUTE - INTEGRATION DONE
@@ -278,10 +332,8 @@ def translate_chat(_id):
         return {"message": "Chat not found"}, 404
 
     response_data = chat.get("responseData")
-    # print("Response Data:", response_data)
 
     target_language = request.json.get("targetLanguage")
-    # print("Target lang:", target_language)
     if not target_language:
         return {"message": "Target language not provided"}, 400
 

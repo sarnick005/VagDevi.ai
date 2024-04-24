@@ -40,30 +40,24 @@ const Profile = () => {
     fetchProfile();
   }, [userId, accessToken]);
 
-
-
-  
-
- 
-
   return (
-    <div>
-      <h2>User Profile</h2>
-      {profileData ? (
-        <div>
-          <p>
-            <strong>Username:</strong> {profileData.profile_data.username}
-          </p>
-          <p>
-            <strong>Email:</strong> {profileData.profile_data.email}
-          </p>
-        </div>
-      ) : (
-        <p>Loading profile...</p>
-      )}
-      <Navbar/>
-     
-    
+    <div className="flex">
+      <Navbar userId={userId} />
+      <div className="profile-content" style={{ padding: "20px" }}>
+        <h2>User Profile</h2>
+        {profileData ? (
+          <div>
+            <p>
+              <strong>Username:</strong> {profileData.profile_data.username}
+            </p>
+            <p>
+              <strong>Email:</strong> {profileData.profile_data.email}
+            </p>
+          </div>
+        ) : (
+          <p>Loading profile...</p>
+        )}
+      </div>
     </div>
   );
 };

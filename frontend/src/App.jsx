@@ -11,7 +11,6 @@ import MyComponent from './components/MyComponent';
 const App = () => {
   return (
     <div>
-      <h1>VagDevi.ai</h1>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />

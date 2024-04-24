@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 CORS(app)
 mongo = PyMongo(app)
+print('CONNECTED TO DB')
 
 
 from routes import *

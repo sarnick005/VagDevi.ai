@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const ImageToText = () => {
   const [profileData, setProfileData] = useState(null);
@@ -140,82 +141,85 @@ const ImageToText = () => {
   };
 
   return (
-    <div>
-      <h2>Image to Text</h2>
-      {profileData ? (
-        <div>
-          <p>
-            <strong>Username:</strong> {profileData.profile_data.username}
-          </p>
-          <p>
-            <strong>Email:</strong> {profileData.profile_data.email}
-          </p>
-        </div>
-      ) : (
-        <p>Loading profile...</p>
-      )}
-      <br />
-      <br />
-      <button onClick={redirectToProfile}>Profile</button>
-      <br />
-      <br />
-      <button onClick={handleLogout}>Logout</button>
-      <br />
-      <br />
-      <button onClick={handleChats}>Chats</button>
-      <br />
-      <br />
-      <h2>Image Upload</h2>
-      <form onSubmit={handleSubmit}>
-        <input type="file" onChange={handleImageChange} accept="image/*" />
+    <div className="flex">
+      <Navbar userId={userId} />
+      <div className="image-to-text-content" style={{ padding: "20px" }}>
+        <h2>Image to Text</h2>
+        {profileData ? (
+          <div>
+            <p>
+              <strong>Username:</strong> {profileData.profile_data.username}
+            </p>
+            <p>
+              <strong>Email:</strong> {profileData.profile_data.email}
+            </p>
+          </div>
+        ) : (
+          <p>Loading profile...</p>
+        )}
         <br />
-        <input
-          type="text"
-          value={prompt}
-          onChange={handlePromptChange}
-          placeholder="Enter prompt here"
-        />
         <br />
-        <button type="submit">Submit</button>
-      </form>
-      {responseText && <p>Text Response: {responseText}</p>}
-      {responseImage && (
-        <div>
-          <p>Image:</p>
-          <img
-            src={`data:image/jpeg;base64,${responseImage}`}
-            alt="Response Image"
+        <button onClick={redirectToProfile}>Profile</button>
+        <br />
+        <br />
+        <button onClick={handleLogout}>Logout</button>
+        <br />
+        <br />
+        <button onClick={handleChats}>Chats</button>
+        <br />
+        <br />
+        <h2>Image Upload</h2>
+        <form onSubmit={handleSubmit}>
+          <input type="file" onChange={handleImageChange} accept="image/*" />
+          <br />
+          <input
+            type="text"
+            value={prompt}
+            onChange={handlePromptChange}
+            placeholder="Enter prompt here"
           />
-        </div>
-      )}
-      <h2>Chats</h2>
-      {chats && chats.length > 0 ? (
-        <ul>
-          {chats.map((chat, index) => (
-            <li key={index}>
-              <p>Prompt: {chat.prompt}</p>
-              <p>Response Data: {chat.responseData}</p>
-              <p>Timestamp: {chat.timestamp}</p>
-              {chat.imageUrl && (
-                <div>
-                  <p>Image:</p>
-                  <img src={chat.imageUrl} alt="Chat Image" />
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No chats</p>
-      )}
-      {responseData && (
-        <div>
-          <p>Response Data: </p>
-          <p>{responseData}</p>
-        </div>
-      )}
-      <h1>From backend</h1>
-      <img src="/backend/uploads/20240423144359.jpg" alt="from-backend" />
+          <br />
+          <button type="submit">Submit</button>
+        </form>
+        {responseText && <p>Text Response: {responseText}</p>}
+        {responseImage && (
+          <div>
+            <p>Image:</p>
+            <img
+              src={`data:image/jpeg;base64,${responseImage}`}
+              alt="Response Image"
+            />
+          </div>
+        )}
+        <h2>Chats</h2>
+        {chats && chats.length > 0 ? (
+          <ul>
+            {chats.map((chat, index) => (
+              <li key={index}>
+                <p>Prompt: {chat.prompt}</p>
+                <p>Response Data: {chat.responseData}</p>
+                <p>Timestamp: {chat.timestamp}</p>
+                {chat.imageUrl && (
+                  <div>
+                    <p>Image:</p>
+                    <img src={chat.imageUrl} alt="Chat Image" />
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No chats</p>
+        )}
+        {responseData && (
+          <div>
+            <p>Response Data: </p>
+            <p>{responseData}</p>
+          </div>
+        )}
+        <h1>From backend</h1>
+        <img src="/backend/uploads/20240423144359.jpg" alt="from-backend" />
+      </div>
     </div>
   );
 };

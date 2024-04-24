@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, Link, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const Navbar = ({ userId: propUserId }) => {
   const [profileData, setProfileData] = useState(null);
   const { userId: routeUserId } = useParams();
-  const userId = propUserId || routeUserId; 
+  const userId = propUserId || routeUserId;
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (userId) {
@@ -46,28 +47,53 @@ const Navbar = ({ userId: propUserId }) => {
     }
   };
 
-  const handleChats = () => {
-    navigate(`/chats/${userId}`);
-  };
-
-  const redirectToProfile = () => {
-    navigate(`/profile/${userId}`);
-  };
-
-  const handleImgToText = () => {
-    navigate(`/chats/image/${userId}`);
-  };
-
   return (
-    <div>
-      <button onClick={redirectToProfile}>Profile</button>
-      <br />
-      <br />
-      <br /> <button onClick={handleChats}>Chats</button> <br />
-      <button onClick={handleLogout}>Logout</button> <br />
-      <br />
-      <button onClick={handleImgToText}>Image to text</button>
-    </div>
+    <aside className="bg-black text-white w-64 h-screen flex flex-col justify-between">
+      <div className="p-4">
+        <div className="text-xl font-bold">Sidebar</div>
+      </div>
+      <div className="p-4">
+        <Link
+          to="/login"
+          onClick={handleLogout}
+          className={`block px-4 py-2 my-2  hover:bg-gray-700 rounded ${
+            location.pathname === "/login" ? "bg-gray-700 text-white" : ""
+          }`}
+        >
+          Logout
+        </Link>
+        <Link
+          to={`/profile/${userId}`}
+          className={`block px-4 py-2 my-2  hover:bg-gray-700 rounded ${
+            location.pathname === `/profile/${userId}`
+              ? "bg-gray-700 text-white"
+              : ""
+          }`}
+        >
+          Profile
+        </Link>
+        <Link
+          to={`/chats/${userId}`}
+          className={`block px-4 py-2 my-2  hover:bg-gray-700 rounded ${
+            location.pathname === `/chats/${userId}`
+              ? "bg-gray-700 text-white"
+              : ""
+          }`}
+        >
+          Chats
+        </Link>
+        <Link
+          to={`/chats/image/${userId}`}
+          className={`block px-4 py-2 my-2 mb-4 hover:bg-gray-700 rounded ${
+            location.pathname === `/chats/image/${userId}`
+              ? "bg-gray-700 text-white"
+              : ""
+          }`}
+        >
+          Image to Text
+        </Link>
+      </div>
+    </aside>
   );
 };
 

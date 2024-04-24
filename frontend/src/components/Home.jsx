@@ -1,21 +1,36 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-const Home = () => {
+import Header from "../partials/Header";
+import HeroHome from "../partials/HeroHome";
+import FeaturesHome from "../partials/Features";
+import FeaturesBlocks from "../partials/FeaturesBlocks";
+import Testimonials from "../partials/Testimonials";
+import Newsletter from "../partials/Newsletter";
+import Footer from "../partials/Footer";
+import Banner from "../partials/Banner";
+
+function Home() {
   return (
-    <div>
-      <h1>Welcome to Our Website  !</h1> 
-      <div>
-        <Link to="/signup">
-          <button>Signup</button>
-        </Link>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        <Link to="/login">
-          <button>Login</button>
-        </Link>
-      </div>
+    <div className="flex flex-col min-h-screen overflow-hidden">
+      {/*  Site header */}
+      <Header />
+
+      {/*  Page content */}
+      <main className="flex-grow">
+        {/*  Page sections */}
+        <HeroHome />
+        <FeaturesHome />
+        <FeaturesBlocks />
+        <Testimonials />
+        <Newsletter />
+      </main>
+
+      <Banner />
+
+      {/*  Site footer */}
+      <Footer />
     </div>
   );
-};
+}
 
 export default Home;

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TextField, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import Navbar from "./Navbar"; // Import Navbar component
-import axios from "axios"; // Import axios for making HTTP requests
+import Navbar from "./Navbar"; 
+import axios from "axios"; 
 
 const ImageToText = () => {
   const [responseData, setResponseData] = useState(null);
@@ -14,8 +14,7 @@ const ImageToText = () => {
   const { userId } = useParams();
   const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
-  const [promptVal, setPromptVal] = useState(""); // Define promptVal state variable
-
+  const [promptVal, setPromptVal] = useState(""); 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
   };
@@ -23,7 +22,7 @@ const ImageToText = () => {
   const handlePromptChange = (event) => {
     const value = event.target.value;
     setPrompt(value);
-    setPromptVal(value); // Store prompt value in promptVal state variable
+    setPromptVal(value);
   };
 
   const handleSubmit = async (event) => {
@@ -63,7 +62,7 @@ const ImageToText = () => {
       setResponseImage(response.data.image);
       setResponseData(response.data.responseData);
       setPrompt("");
-      fetchChats(); // Fetch chats after updating
+      fetchChats(); 
     } catch (error) {
       console.error("Error uploading image:", error.response.data);
     }
@@ -80,14 +79,14 @@ const ImageToText = () => {
 
   return (
     <>
-      <Navbar userId={userId} /> {/* Set the Navbar component here */}
+      <Navbar userId={userId} /> 
       <div className="fixed inset-0 flex justify-center items-center overflow-hidden">
         <div className="w-[1200px] max-w-lg bg-white p-8 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold mb-4 text-center">Image to Text</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4 flex">
               {" "}
-              {/* Center the input field */}
+             
               <div>
                 <label className="block text-sm font-medium text-gray-700">
                   Upload Image

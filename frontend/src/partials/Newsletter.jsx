@@ -113,7 +113,7 @@ function Newsletter() {
                       aria-label="Your email…"
                     />
                     <a
-                      className="btn text-white bg-indigo-500 hover:bg-indigo-400 shadow px-4 py-3 rounded-lg"
+                      className="btn text-black bg-white shadow px-4 py-3 rounded-lg"
                       href="#0"
                     >
                       Subscribe

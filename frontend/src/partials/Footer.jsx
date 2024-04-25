@@ -24,18 +24,17 @@ function Footer() {
                       fx="21.152%"
                       fy="86.063%"
                       r="79.941%"
-                      id="footer-logo"
+                      id="header-logo"
                     >
-                      <stop stopColor="#4FD1C5" offset="0%" />
-                      <stop stopColor="#81E6D9" offset="25.871%" />
-                      <stop stopColor="#338CF5" offset="100%" />
+                      <stop stopColor="#000" offset="0%" />
+                      <stop stopColor="#fff" offset="100%" />
                     </radialGradient>
                   </defs>
                   <rect
                     width="32"
                     height="32"
                     rx="16"
-                    fill="url(#footer-logo)"
+                    fill="black" // Change the fill color to black
                     fillRule="nonzero"
                   />
                 </svg>
@@ -229,7 +228,7 @@ function Footer() {
                         aria-hidden="true"
                       ></span>
                       <svg
-                        className="w-3 h-3 fill-current text-indigo-500 mx-3 flex-shrink-0"
+                        className="w-3 h-3 fill-current text-black-500 mx-3 flex-shrink-0"
                         viewBox="0 0 12 12"
                         xmlns="http://www.w3.org/2000/svg"
                       >
@@ -302,10 +301,7 @@ function Footer() {
           {/* Copyrights note */}
           <div className="text-sm text-gray-600 mr-4">
             Made by{" "}
-            <a
-              className="text-indigo-500 hover:underline"
-              href="https://cruip.com/"
-            >
+            <a className="text-black hover:underline" href="https://cruip.com/">
               Cruip
             </a>
             . All rights reserved.

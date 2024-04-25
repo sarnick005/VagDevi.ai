@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import LogoName from '../assets/logo-name.png';
 
 function Header() {
   const [top, setTop] = useState(true);
@@ -15,14 +16,16 @@ function Header() {
 
   return (
     <header
-      className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${!top && "bg-white backdrop-blur-sm shadow-lg"}`}
+      className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out ${
+        !top && "bg-white backdrop-blur-sm shadow-lg"
+      }`}
     >
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Site branding */}
           <div className="flex-shrink-0 mr-4">
             {/* Logo */}
-            <Link to="/" className="block" aria-label="Cruip">
+            {/* <Link to="/" className="block" aria-label="Cruip">
               <svg
                 className="w-8 h-8"
                 viewBox="0 0 32 32"
@@ -37,9 +40,8 @@ function Header() {
                     r="79.941%"
                     id="header-logo"
                   >
-                    <stop stopColor="#4FD1C5" offset="0%" />
-                    <stop stopColor="#81E6D9" offset="25.871%" />
-                    <stop stopColor="#338CF5" offset="100%" />
+                    <stop stopColor="#000" offset="0%" />
+                    <stop stopColor="#fff" offset="100%" />
                   </radialGradient>
                 </defs>
                 <rect
@@ -50,7 +52,8 @@ function Header() {
                   fillRule="nonzero"
                 />
               </svg>
-            </Link>
+            </Link> */}
+            <img style={{width: "150px", height:"50px"}} src={LogoName} alt="" />
           </div>
 
           {/* Site navigation */}
@@ -59,7 +62,7 @@ function Header() {
               <li>
                 <Link
                   to="/login"
-                  className="font-medium text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out"
+                  className="font-medium text-gray-500 hover:text-gray-900 transition duration-150 ease-in-out"
                 >
                   Sign in
                 </Link>
@@ -67,7 +70,7 @@ function Header() {
               <li>
                 <Link
                   to="/signup"
-                  className="btn-sm text-white bg-indigo-500 hover:bg-indigo-400 px-3 py-2 rounded-md flex items-center"
+                  className="btn-sm text-white bg-black hover:bg-gray-600 px-3 py-2 rounded-md flex items-center"
                 >
                   <span>Sign up</span>
                   <svg

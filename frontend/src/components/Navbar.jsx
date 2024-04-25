@@ -51,6 +51,13 @@ const Navbar = ({ userId: propUserId, chatId }) => {
 
   return (
     <aside className="bg-black text-white w-64 h-screen flex flex-col justify-between">
+      <Link
+        to={`/profile/${userId}`}
+      >
+        <h2 className="mb-4 relative left-[80px] mt-6 text-xl underline">
+          VagDevi
+        </h2>
+      </Link>
       <div className="p-4"></div>
       <div className="p-4">
         <Link

@@ -205,9 +205,9 @@ const handleBookmark = async (chatId) => {
               overflowX: "hidden",
             }}
           >
-            <h2 className="mb-4 relative left-[60px] mb-4 text-xl underline">
-              VagDevi.ai
-            </h2>
+            {/* <h2 className="mb-4 relative left-[60px] mb-4 text-xl underline">
+              VagDevi
+            </h2> */}
             <h1 className="relative left-[60px] mb-4">Chat history</h1>
             {chatDates.length > 0 ? (
               <div className="mb-4 flex flex-col">

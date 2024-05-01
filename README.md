@@ -1,6 +1,3 @@
-Sure, here's a reformatted version for better readability:
-
-
 ## VagDevi: AI Chatbot Project
 
 ### Instructions

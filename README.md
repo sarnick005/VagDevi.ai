@@ -75,7 +75,7 @@
 ### Forking and Branching
 
 1. **Forking the Repository:**
-   - Navigate to the [VagDevi repository](https://github.com/sarnick005/VagDevi) on GitHub.
+   - Navigate to the [VagDevi repository](https://github.com/sarnick005/VagDevi.ai) on GitHub.
    - Click the "Fork" button in the top-right corner of the page.
    - Wait for the repository to be copied to your GitHub account.
 
@@ -114,5 +114,4 @@
 - [Shubhayan Bagchi](https://github.com/S11UB11AYAN)
 - [Subhakash Paul](https://github.com/SUBHAKASH-PAUL)
 
-```
 

@@ -113,7 +113,5 @@
 - [Shubhayan Bagchi](https://github.com/S11UB11AYAN)
 - [Subhakash Paul](https://github.com/SUBHAKASH-PAUL)
 
-Feel free to reach out with any questions or feedback!
 ```
 
-This layout provides a clearer structure for the instructions and makes it easier for users to follow.

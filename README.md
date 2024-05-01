@@ -1,7 +1,10 @@
+Sure, here's a reformatted version for better readability:
+
 
 ## VagDevi: AI Chatbot Project
-### Instructions
 
+### Instructions
+```markdown
 1. **Clone Repository:**
    ```bash
    git clone <repository_url>
@@ -12,6 +15,7 @@
    ```bash
    cd frontend
    npm install
+   npm run dev
    ```
 
 3. **Backend Setup:**
@@ -29,20 +33,43 @@
      GOOGLE_GEMINI_API_KEY=<your_google_gemini_api_key>
      ```
 
-5. **Start the Application:**
+5. **Create a Virtual Environment:**
+
+   - For Unix or MacOS (Bash):
+     ```bash
+     cd backend
+     python3 -m venv .venv
+     ```
+
+   - For Windows (PowerShell):
+     ```bash
+     cd backend
+     python -m venv .venv
+     ```
+
+6. **Activate the Virtual Environment:**
+   - On Unix or MacOS:
+     ```bash
+     source .venv/bin/activate
+     ```
+   - On Windows:
+     ```bash
+     .venv\Scripts\activate
+     ```
+
+7. **Install Dependencies:**
+    ```bash
+     pip install -r requirements.txt
+    ```
+
+8. **Start the Application:**
    - Start MongoDB server.
    - Backend server:
      ```bash
-     cd backend
      python app.py
      ```
-   - Frontend development server:
-     ```bash
-     cd frontend
-     npm start
-     ```
 
-6. **Accessing the Application:**
+9. **Accessing the Application:**
    Open `http://localhost:5173` in your web browser.
 
 ### Forking and Branching
@@ -79,15 +106,18 @@
    - Once approved, your changes will be merged into the main project repository.
 
 ### Tech Stack
+
 - Frontend: React, Tailwind CSS, Material-UI
 - Backend: Flask
 - Authentication: JWT
 - Database: MongoDB
-- External API: Google GemiNi
+- External API: Google Gemini
 
 ### Contributors
+
 - [Sarnick Chakraborty](https://github.com/sarnick005)
 - [Shubhayan Bagchi](https://github.com/S11UB11AYAN)
 - [Subhakash Paul](https://github.com/SUBHAKASH-PAUL)
 
-Feel free to reach out with any questions or feedback!
+```
+

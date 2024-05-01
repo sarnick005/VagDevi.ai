@@ -376,34 +376,6 @@ def upload_image(userId):
         return jsonify({"status": "failed", "error": "Internal server error"}), 500
 
 
-# @app.route("/chats/image/<string:userId>", methods=["GET"])
-# @jwt_required()
-# def get_upload_file(userId):
-#     try:
-#         user_id = ObjectId(userId)
-#         user_details = mongo.db.users.find_one({"_id": user_id})
-#         if not user_details:
-#             return jsonify({"error": "User not found"}), 404
-#         current_user_email = get_jwt_identity()
-#         user_email = user_details.get("email")
-#         if current_user_email != user_email:
-#             return jsonify({"error": "Unauthorized access"}), 403
-#         chats = list(mongo.db.images.find({"email": user_email}))
-#         chats_list = [
-#             {
-#                 "prompt": chat["prompt"],
-#                 "responseData": chat["responseData"],
-#                 "timestamp": chat["timestamp"],
-#                 "imageUrl": f"uploads/{chat['image']}",
-#             }
-#             for chat in chats
-#         ]
-
-#         return jsonify({"chats": chats_list}), 200
-#     except Exception as e:
-#         print("ERROR IN IMAGE UPLOAD:", e)
-#         return jsonify({"error": "Internal server error"}), 500
-
 
 @app.route("/chats/voice", methods=["POST"])
 def speech_upload():

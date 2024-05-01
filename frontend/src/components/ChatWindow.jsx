@@ -86,6 +86,7 @@ const ChatWindow = () => {
       );
       setSelectedDateChats(response.data.chats);
       setSelectedDate(date);
+      navigate(`/chats/${userId}`);
     } catch (error) {
       console.error("Error fetching chats for date:", error.response.data);
     }
@@ -172,14 +173,6 @@ const handleBookmark = async (chatId) => {
       },
     });
 
-    // setSelectedDateChats((prevChats) => {
-    //   return prevChats.map((chat) => {
-    //     if (chat._id === chatId) {
-    //       return { ...chat, bookmarked: true };
-    //     }
-    //     return chat;
-    //   });
-    // });
         navigate(`/chats/${userId}`);
   } catch (error) {
     console.error("Error bookmarking chat:", error);
@@ -205,9 +198,6 @@ const handleBookmark = async (chatId) => {
               overflowX: "hidden",
             }}
           >
-            {/* <h2 className="mb-4 relative left-[60px] mb-4 text-xl underline">
-              VagDevi
-            </h2> */}
             <h1 className="relative left-[60px] mb-4">Chat history</h1>
             {chatDates.length > 0 ? (
               <div className="mb-4 flex flex-col">
@@ -223,7 +213,9 @@ const handleBookmark = async (chatId) => {
                 ))}
               </div>
             ) : (
-              <p>No chat dates found.</p>
+              <div className="w-[150px] relative left-[60px]">
+                <p>No chat yet</p>
+              </div>
             )}
           </div>
 
@@ -297,7 +289,9 @@ const handleBookmark = async (chatId) => {
                         </div>
                       ))
                     ) : (
-                      <p>No chats for this date.</p>
+                      <div className="flex justify-center text-2xl font-medium ">
+                        <p>No chats for this date.</p>
+                      </div>
                     )}
                     <br />
                   </div>

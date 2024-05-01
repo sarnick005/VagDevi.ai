@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import Modal from "../utils/Modal";
 
+
+import HeroImage2 from "../assets/home-removebg-preview.png";
 import HeroImage from "../assets/home.jpg";
 import Video from "../videos/video.mp4";
 
@@ -107,8 +109,8 @@ function HeroHome() {
               <div className="flex flex-col justify-center">
                 <img
                   className="mx-auto"
-                  src={HeroImage}
-                  width="768"
+                  src={HeroImage2} 
+                  width="750"
                   height="432"
                   alt="Hero"
                 />

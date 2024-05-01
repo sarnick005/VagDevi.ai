@@ -58,7 +58,7 @@ const Profile = () => {
       <div className="flex justify-center">
         <div className="profile-card  absolute top-[230px] left-[700px] bg-white rounded-lg shadow-lg p-6">
           {/* Profile Photo */}
-          <div className="profile-photo  bg-gray-200 w-24 h-24 flex items-center justify-center rounded-full text-3xl font-bold text-gray-700">
+          <div className="profile-photo  bg-gray-200 w-24 h-24 flex items-center justify-center rounded-full text-3xl font-bold text-gray-900">
             {getFirstLetter()}
           </div>
           {/* Profile Data */}
@@ -81,17 +81,16 @@ const Profile = () => {
           <div className="flex mt-4">
             <Link
               to={`/chats/${userId}`}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 mr-2 rounded"
+              className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 mr-2 rounded"
             >
               Chats
             </Link>
             <Link
               to={`/chats/image/${userId}`}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 mr-2 rounded"
+              className="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 mr-2 rounded"
             >
               Image to Chats
             </Link>
-
           </div>
         </div>
       </div>

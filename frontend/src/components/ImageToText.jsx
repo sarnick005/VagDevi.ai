@@ -144,7 +144,7 @@ const ImageToText = () => {
               </p>
               <div
                 className="w-full max-w-md overflow-y-auto"
-                style={{ maxHeight: "200px" }} // Set a max height to limit the chat box height
+                style={{ maxHeight: "200px" }} 
               >
                 <p className="mt-1 text-sm text-gray-500">{responseData}</p>
               </div>

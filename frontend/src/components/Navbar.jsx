@@ -54,7 +54,7 @@ const Navbar = ({ userId: propUserId, chatId }) => {
       <Link
         to={`/profile/${userId}`}
       >
-        <h2 className="mb-4 relative left-[80px] mt-6 text-xl underline">
+        <h2 className="mb-4 relative left-[85px] mt-6 text-xl underline">
           VagDevi
         </h2>
       </Link>

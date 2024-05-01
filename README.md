@@ -4,8 +4,10 @@ Sure, here's a reformatted version for better readability:
 ## VagDevi: AI Chatbot Project
 
 ### Instructions
-```markdown
+
 1. **Clone Repository:**
+
+
    ```bash
    git clone <repository_url>
    cd VagDevi
@@ -100,11 +102,6 @@ Sure, here's a reformatted version for better readability:
    - Select the branch containing your changes and provide a descriptive title and summary for your pull request.
    - Click the "Create Pull Request" button.
 
-6. **Review and Merge:**
-   - Wait for maintainers to review your pull request.
-   - Address any feedback or requested changes.
-   - Once approved, your changes will be merged into the main project repository.
-
 ### Tech Stack
 
 - Frontend: React, Tailwind CSS, Material-UI
@@ -119,5 +116,7 @@ Sure, here's a reformatted version for better readability:
 - [Shubhayan Bagchi](https://github.com/S11UB11AYAN)
 - [Subhakash Paul](https://github.com/SUBHAKASH-PAUL)
 
+Feel free to reach out with any questions or feedback!
 ```
 
+This layout provides a clearer structure for the instructions and makes it easier for users to follow.

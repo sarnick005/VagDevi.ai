@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Logo from "../assets/logo-name.png";
 
 function Footer() {
   return (
@@ -12,32 +13,7 @@ function Footer() {
             <div className="mb-2">
               {/* Logo */}
               <Link to="/" className="inline-block" aria-label="Cruip">
-                <svg
-                  className="w-8 h-8"
-                  viewBox="0 0 32 32"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <defs>
-                    <radialGradient
-                      cx="21.152%"
-                      cy="86.063%"
-                      fx="21.152%"
-                      fy="86.063%"
-                      r="79.941%"
-                      id="header-logo"
-                    >
-                      <stop stopColor="#000" offset="0%" />
-                      <stop stopColor="#fff" offset="100%" />
-                    </radialGradient>
-                  </defs>
-                  <rect
-                    width="32"
-                    height="32"
-                    rx="16"
-                    fill="black" // Change the fill color to black
-                    fillRule="nonzero"
-                  />
-                </svg>
+                <img src={Logo} alt="" className="h-[80px] w-[200px]" />
               </Link>
             </div>
             <div className="text-sm text-gray-600">

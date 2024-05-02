@@ -37,14 +37,12 @@
      ```bash
      cd backend
      python3 -m venv .venv
-     pip install -r requirements.txt
      ```
 
    - For Windows (PowerShell):
      ```bash
      cd backend
      python -m venv .venv
-     pip install -r requirements.txt
      ```
 
 6. **Activate the Virtual Environment:**
